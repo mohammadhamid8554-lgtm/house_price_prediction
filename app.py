@@ -1,20 +1,17 @@
 import sys
-from src.ml_house_price_prediction.logger import logging
+
 from src.ml_house_price_prediction.exception import CustomException
-from src.ml_house_price_prediction.components.data_ingestion import DataIngestion
-
-
+from src.ml_house_price_prediction.logger import logging
+from src.ml_house_price_prediction.pipelines.training_pipeline import TrainPipeline
 
 
 if __name__ == "__main__":
-    logging.info("The execution has started!!")
+    logging.info("Application execution started.")
 
     try:
-        # Data Ingestion
+        train_pipeline = TrainPipeline()
+        train_pipeline.run_pipeline()
+        logging.info("Training pipeline completed successfully.")
 
-        data_ingestion = DataIngestion()
-        train_path, test_path = data_ingestion.initiate_data_ingestion()
-
-        
-    except Exception as e:
-        raise CustomException(e, sys)
+    except Exception as exc:
+        raise CustomException(exc, sys) from exc
