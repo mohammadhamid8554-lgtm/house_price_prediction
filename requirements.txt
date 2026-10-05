@@ -1,8 +1,8 @@
 pandas 
-numpy 
+numpy==2.5.3
 matplotlib
 seaborn 
-scikit-learn
+scikit-learn==1.9.1
 setuptools
 pymysql
 mysql-connector-python

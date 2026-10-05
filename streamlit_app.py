@@ -1,3 +1,4 @@
+import os
 from datetime import date
 
 import requests
@@ -7,7 +8,10 @@ st.set_page_config(page_title="House Price Estimator", page_icon="🏠")
 st.title("House Price Estimator")
 st.write("Enter the house details to get an estimated price.")
 
-api_url = st.sidebar.text_input("Prediction API URL", "http://127.0.0.1:8000").rstrip("/")
+default_api_url = os.getenv("PREDICTION_API_URL", "http://127.0.0.1:8000").strip()
+api_url = st.sidebar.text_input("Prediction API URL", default_api_url).strip().rstrip("/")
+if api_url and "://" not in api_url:
+    api_url = f"https://{api_url}"
 
 with st.form("house_features"):
     st.subheader("House details")
@@ -58,7 +62,7 @@ if submitted:
     }
 
     try:
-        response = requests.post(f"{api_url}/predict", json=payload, timeout=20)
+        response = requests.post(f"{api_url}/predict", json=payload, timeout=120)
         response.raise_for_status()
         result = response.json()
     except requests.HTTPError as exc:

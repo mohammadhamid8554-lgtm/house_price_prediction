@@ -60,6 +60,20 @@ Training reads `data/raw.csv` and writes the model and preprocessor to
 The API uses the model artifacts, applies the same sale-date year conversion
 used during training, and returns an estimated price.
 
+## Deploy on Render
+
+The `render.yaml` Blueprint creates two free web services: the FastAPI backend
+and the Streamlit frontend. The frontend gets the API host from Render
+automatically.
+
+1. Push the project to a GitHub repository that you control. Keep `.env` and
+   `venv/` out of the repository; `.env` contains local settings.
+2. Sign in to Render, choose **New +** → **Blueprint**, and connect that GitHub
+   repository.
+3. Review the two services from `render.yaml` and choose **Apply**.
+4. Wait for both services to finish deploying. Open the UI service's URL to use
+   the app; open the API service's `/health` URL to check model readiness.
+
 ## Tests
 
 Run the test suite from the project root:

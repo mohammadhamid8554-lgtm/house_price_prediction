@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: house-price-api
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.14.6
+
+  - type: web
+    name: house-price-ui
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: streamlit run streamlit_app.py --server.address 0.0.0.0 --server.port $PORT --server.headless true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.14.6
+      - key: PREDICTION_API_URL
+        fromService:
+          type: web
+          name: house-price-api
+          property: host
