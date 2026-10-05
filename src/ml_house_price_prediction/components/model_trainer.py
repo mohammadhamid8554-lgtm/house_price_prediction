@@ -4,11 +4,11 @@ import pandas as pd
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
 
-from src.ml_house_price_prediction.config.configuration import ConfigManager
-from src.ml_house_price_prediction.entity.artifact_entity import ModelTrainerArtifact
-from src.ml_house_price_prediction.exception import CustomException
-from src.ml_house_price_prediction.logger import logging
-from src.ml_house_price_prediction.utils import load_object, save_object
+from ml_house_price_prediction.config.configuration import ConfigManager
+from ml_house_price_prediction.entity.artifact_entity import ModelTrainerArtifact
+from ml_house_price_prediction.exception import CustomException
+from ml_house_price_prediction.logger import logging
+from ml_house_price_prediction.utils import load_object, save_object
 
 
 class ModelTrainer:

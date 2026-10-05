@@ -7,8 +7,8 @@ from dotenv import load_dotenv
 from sklearn.metrics import r2_score
 from sklearn.model_selection import GridSearchCV
 
-from src.ml_house_price_prediction.exception import CustomException
-from src.ml_house_price_prediction.logger import logging
+from ml_house_price_prediction.exception import CustomException
+from ml_house_price_prediction.logger import logging
 
 load_dotenv()
 
@@ -94,4 +94,3 @@ def load_object(file_path):
 
     except Exception as exc:
         raise CustomException(exc, sys) from exc
-

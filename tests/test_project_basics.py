@@ -1,9 +1,9 @@
 import pickle
 from pathlib import Path
 
-from src.ml_house_price_prediction.exception import CustomException
-from src.ml_house_price_prediction.logger import logging
-from src.ml_house_price_prediction.utils import save_object, load_object
+from ml_house_price_prediction.exception import CustomException
+from ml_house_price_prediction.logger import logging
+from ml_house_price_prediction.utils import load_object, save_object
 
 
 def test_custom_exception_has_message():

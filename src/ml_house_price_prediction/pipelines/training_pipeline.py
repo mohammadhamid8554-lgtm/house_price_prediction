@@ -1,11 +1,11 @@
 import sys
 
-from src.ml_house_price_prediction.components.data_ingestion import DataIngestion
-from src.ml_house_price_prediction.components.data_transformation import DataTransformation
-from src.ml_house_price_prediction.components.model_trainer import ModelTrainer
-from src.ml_house_price_prediction.config.configuration import ConfigManager
-from src.ml_house_price_prediction.exception import CustomException
-from src.ml_house_price_prediction.logger import logging
+from ml_house_price_prediction.components.data_ingestion import DataIngestion
+from ml_house_price_prediction.components.data_transformation import DataTransformation
+from ml_house_price_prediction.components.model_trainer import ModelTrainer
+from ml_house_price_prediction.config.configuration import ConfigManager
+from ml_house_price_prediction.exception import CustomException
+from ml_house_price_prediction.logger import logging
 
 
 class TrainPipeline:
@@ -20,7 +20,7 @@ class TrainPipeline:
             train_path, test_path = data_ingestion.initiate_data_ingestion()
 
             data_transformation = DataTransformation(self.config)
-            data_transformation.initiate_data_transformation(train_path, test_path)
+            data_transformation.initiate_data_transformation(train_path)
 
             model_trainer = ModelTrainer(self.config)
             model_trainer.initiate_model_training(train_path, test_path)

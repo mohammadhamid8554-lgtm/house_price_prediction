@@ -1,33 +1,32 @@
-import os
 import sys
+from pathlib import Path
 
 import pandas as pd
 
-from src.ml_house_price_prediction.exception import CustomException
-from src.ml_house_price_prediction.logger import logging
-from src.ml_house_price_prediction.utils import load_object
+from ml_house_price_prediction.exception import CustomException
+from ml_house_price_prediction.utils import load_object
 
 
 class PredictPipeline:
-    def __init__(self, model_path: str, preprocessor_path: str):
-        self.model_path = model_path
-        self.preprocessor_path = preprocessor_path
+    """Load the saved model and preprocessor once, then serve predictions."""
 
-    def predict(self, features):
+    def __init__(self, model_path: str | Path | None = None, preprocessor_path: str | Path | None = None):
+        project_root = Path(__file__).resolve().parents[3]
+        self.model_path = Path(model_path) if model_path else project_root / "artifacts" / "model.pkl"
+        self.preprocessor_path = (
+            Path(preprocessor_path) if preprocessor_path else project_root / "artifacts" / "preprocessor.pkl"
+        )
+        self.model = load_object(str(self.model_path))
+        self.preprocessor = load_object(str(self.preprocessor_path))
+
+    def predict(self, features: pd.DataFrame):
         try:
-            model = load_object(self.model_path)
-            preprocessor = load_object(self.preprocessor_path)
-            transformed_features = preprocessor.transform(features)
-            prediction = model.predict(transformed_features)
-            return prediction
+            prepared_features = features.copy()
+            if "date" in prepared_features.columns:
+                prepared_features["date"] = pd.to_datetime(prepared_features["date"], errors="raise").dt.year
+
+            transformed_features = self.preprocessor.transform(prepared_features)
+            return self.model.predict(transformed_features)
 
         except Exception as exc:
             raise CustomException(exc, sys) from exc
-
-
-class CustomData:
-    def __init__(self, **kwargs):
-        self.__dict__.update(kwargs)
-
-    def get_data_as_dataframe(self):
-        return pd.DataFrame([self.__dict__])

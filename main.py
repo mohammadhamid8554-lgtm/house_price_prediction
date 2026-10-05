@@ -1,8 +1,8 @@
 import sys
 
-from src.ml_house_price_prediction.exception import CustomException
-from src.ml_house_price_prediction.logger import logging
-from src.ml_house_price_prediction.pipelines.training_pipeline import TrainPipeline
+from ml_house_price_prediction.exception import CustomException
+from ml_house_price_prediction.logger import logging
+from ml_house_price_prediction.pipelines.training_pipeline import TrainPipeline
 
 
 if __name__ == "__main__":

@@ -1,4 +1,3 @@
-import os
 import sys
 
 import pandas as pd
@@ -7,11 +6,10 @@ from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
-from src.ml_house_price_prediction.config.configuration import ConfigManager
-from src.ml_house_price_prediction.entity.artifact_entity import DataTransformationArtifact
-from src.ml_house_price_prediction.exception import CustomException
-from src.ml_house_price_prediction.logger import logging
-from src.ml_house_price_prediction.utils import save_object
+from ml_house_price_prediction.config.configuration import ConfigManager
+from ml_house_price_prediction.exception import CustomException
+from ml_house_price_prediction.logger import logging
+from ml_house_price_prediction.utils import save_object
 
 
 class DataTransformation:
@@ -79,36 +77,21 @@ class DataTransformation:
         except Exception as exc:
             raise CustomException(exc, sys) from exc
 
-    def initiate_data_transformation(self, train_path, test_path):
+    def initiate_data_transformation(self, train_path):
         try:
             train_df = self._prepare_features(pd.read_csv(train_path))
-            test_df = self._prepare_features(pd.read_csv(test_path))
 
             target_column = "price"
             X_train = train_df.drop(columns=[target_column])
-            X_test = test_df.drop(columns=[target_column])
 
             preprocessor = self.get_data_transformer_object()
 
-            X_train_processed = preprocessor.fit_transform(X_train)
-            X_test_processed = preprocessor.transform(X_test)
+            preprocessor.fit(X_train)
 
             save_object(self.config.get_data_transformation_config().preprocessor_object_path, preprocessor)
 
-            dense_train = X_train_processed.toarray() if hasattr(X_train_processed, "toarray") else X_train_processed
-            dense_test = X_test_processed.toarray() if hasattr(X_test_processed, "toarray") else X_test_processed
-
-            pd.DataFrame(dense_train).to_csv(os.path.join("artifacts", "train_transformed.csv"), index=False)
-            pd.DataFrame(dense_test).to_csv(os.path.join("artifacts", "test_transformed.csv"), index=False)
-
-            artifact = DataTransformationArtifact(
-                transformed_train_path=os.path.join("artifacts", "train_transformed.csv"),
-                transformed_test_path=os.path.join("artifacts", "test_transformed.csv"),
-                preprocessor_path=self.config.get_data_transformation_config().preprocessor_object_path,
-            )
-
             logging.info("Data transformation completed successfully.")
-            return artifact
+            return self.config.get_data_transformation_config().preprocessor_object_path
 
         except Exception as exc:
             raise CustomException(exc, sys) from exc

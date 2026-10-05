@@ -7,4 +7,10 @@ setuptools
 pymysql
 mysql-connector-python
 python-dotenv
+uvicorn[standard]
+fastapi
+streamlit
+requests
+httpx2
+pytest
 -e .
